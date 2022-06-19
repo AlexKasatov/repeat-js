@@ -75,4 +75,6 @@ button.addEventListener('click', function() {
 // Timer Callback
 setTimeout(() => {
   console.log('DONE! Time to eat!');
-}, 1000);
+}, 1000)
+
+
