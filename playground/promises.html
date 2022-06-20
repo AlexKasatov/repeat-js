@@ -1,17 +1,98 @@
+
 <!DOCTYPE html>
 <html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1.0" />
+    <title>Promises</title>
+    <link rel="stylesheet" href="../base.css" />
+    <title>Promise</title>
+  </head>
 
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width,initial-scale=1.0">
-  <title>Promises</title>
-  <link rel="stylesheet" href="../base.css">
-</head>
+  <body>
+    <script>
+      const makePizza = (toppings = []) =>
+              new Promise((resolve, reject) => {
+                      // reject if people try pineaple
+                      if (toppings.includes('pineapple')) {
+                              // eslint-disable-next-line prefer-promise-reject-errors
+                              reject('Seriously? Get out 🍍');
+                      }
 
-<body>
-  <script>
+                      // eslint-disable-next-line prettier/prettier
+                const amountOfTimeToBake = 500 + toppings.length * 200;
+                      setTimeout(() => {
+                              resolve(`🍕 with ${toppings.join(', ')}`);
+                      }, amountOfTimeToBake);
+              });
 
-  </script>
-</body>
+      // Promise Chain
+      makePizza(['pepperoni', 'hot sause'])
+              .then((pizza) => {
+                      console.log(pizza);
+                      return makePizza(['pineapple', 'mushrooms']);
+              })
+              .then((pizza) => console.log(pizza))
+              // eslint-disable-next-line no-use-before-define
+              .catch(handleError);
 
+//       Run them Cuncurrently
+//       const pizzaPromise1 = makePizza(['pepperoni', 'hot sause']);
+//       const pizzaPromise2 = makePizza(['tomato', 'cheese', 'onion']);
+//       const pizzaPromise3 = makePizza([
+//               'mushroms',
+//               'barbeque',
+//               'mushroms',
+//               'barbeque',
+//               'mushroms',
+//               'barbeque',
+//               'mushroms',
+//               'barbeque',
+//       ]);
+//       const pizzaPromise4 = makePizza([
+//               'mushroms',
+//               'barbeque',
+//               'mushroms',
+//               'barbeque',
+//               'mushroms',
+//               'barbeque',
+//               'mushroms',
+//               'barbeque',
+//       ]);
+
+      // statick method
+      // const dinnerPromise = Promise.all([pizzaPromise1, pizzaPromise2, pizzaPromise3, pizzaPromise4]);
+      // dinnerPromise.then(([pepperoni, tomato, barby, barby2]) => {
+      //         console.log('🚀 ~ file: promises.html ~ line 58 ~ dinnerPromise.then ~ pepperoni', barby2);
+      // });
+
+      // // return 1st resolved promise (pizzaPromise1)
+      // const firstPizzaPromise = Promise.race([pizzaPromise1, pizzaPromise2, pizzaPromise3, pizzaPromise4]);
+
+      // firstPizzaPromise.then((pizza) => {
+      //   console.log(pizza);
+      // });
+
+      function handleError(error) {
+              console.log('oohh no error!');
+              console.log(error);
+      }
+
+      makePizza(['cheese', 'pineapple'])
+              .then((pizza) => {
+                      console.log(pizza);
+              })
+              .catch(handleError);
+
+      const p1 = makePizza(['pep']);
+      const p2 = makePizza(['pineapple']);
+
+      // THIS METHOD DON'T BREAKS PROMISE CHAIN
+      const dinnerPromise2 = Promise.allSettled([p1, p2]);
+
+      dinnerPromise2.then((result) => {
+        console.log(result);
+      });
+    </script>
+  </body>
 </html>
