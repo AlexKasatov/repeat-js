@@ -1,0 +1,78 @@
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1.0">
+  <title>HTML Base</title>
+  <link rel="stylesheet" href="../base.css">
+</head>
+
+<body>
+<script>
+// eslint-disable-next-line arrow-body-style
+const makePizza = (toppings = []) => {
+        // eslint-disable-next-line prettier/prettier
+
+        return new Promise((res, rej) => {
+                if (toppings.includes('chilly')) {
+                        // eslint-disable-next-line prefer-promise-reject-errors
+                        rej(console.log(`Common! Get Out 🌶`));
+                }
+
+                // eslint-disable-next-line prettier/prettier
+                const timeToBake = 500 + (toppings.length * 200);
+
+                setTimeout(() => {
+                        res(`here's your 🍕🍕🍕 with ${toppings.join(' ,')}`);
+                }, timeToBake);
+        });
+};
+
+function handleErrors(error) {
+        console.error(error);
+        console.error('Ohhhhh Nooo!');
+}
+
+makePizza(['barbeque', 'cheese', 'onion'])
+        .then((pizza) => console.log(pizza))
+        .catch(handleErrors);
+
+const pizzaPromise1 = makePizza(['barbeque']);
+const pizzaPromise2 = makePizza(['barbeque', 'cheese', 'hamon']);
+const pizzaPromise3 = makePizza(['barbeque', 'cheese', 'chilly']);
+const pizzaPromise4 = makePizza([
+        'barbeque',
+        'cheese',
+        'pepperoni',
+        'pepperoni',
+        'pepperoni',
+        'pepperoni',
+        'pepperoni',
+]);
+const pizzaPromise5 = makePizza([
+        'barbeque',
+        'cheese',
+        'pepperoni',
+        'pepperoni',
+        'pepperoni',
+        'pepperoni',
+        'pepperoni',
+]);
+
+const pizzaAll = Promise.all([pizzaPromise1, pizzaPromise2, pizzaPromise3, pizzaPromise4, pizzaPromise5])
+        .then((pizza) => console.log(pizza))
+        .catch(handleErrors);
+
+const pizzaFast = Promise.race([pizzaPromise1, pizzaPromise2, pizzaPromise3, pizzaPromise4, pizzaPromise5])
+        .then((pizza) => console.log(pizza))
+        .catch(handleErrors);
+
+const pizzaAllResult = Promise.allSettled([pizzaPromise1, pizzaPromise2, pizzaPromise3, pizzaPromise4, pizzaPromise5]);
+
+pizzaAllResult.then((pizza) => console.log(pizza)).catch(handleErrors);
+</script>
+</body>
+
+</html>

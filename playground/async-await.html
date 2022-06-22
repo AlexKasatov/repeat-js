@@ -10,7 +10,51 @@
 
 <body>
   <script>
+    function wait(sec = 0) {
+            // eslint-disable-next-line no-promise-executor-return
+            return new Promise((res) => setTimeout(() => res(), sec));
+    }
 
+    function makePizza(toppings = []) {
+            return new Promise((resolve, reject) => {
+                    // reject if people try with pineapple
+                    if (toppings.includes('pineapple')) {
+                            // eslint-disable-next-line prefer-promise-reject-errors
+                            reject('Seriously? Get out 🍍');
+                    }
+                    const amountOfTimeToBake = 500 + toppings.length * 200;
+                    // wait 1 second for the pizza to cook:
+                    setTimeout(() => {
+                            // when you are ready, you can resolve this promise
+                            resolve(`Here is your pizza 🍕 with the toppings ${toppings.join(' ')}`);
+                    }, amountOfTimeToBake);
+                    // if something went wrong, we can reject this promise;
+            });
+    }
+
+    async function go() {
+            console.log('Startinng');
+            await wait(2000);
+            console.log('Ending');
+    }
+    go();
+
+    // ----- await PLAYS role similare  .then((resolve) => resolve.data)
+
+    // async function makeDinner() {
+    //         const pizza1 = await makePizza(['pepperoni']);
+    //         const pizza2 = await makePizza(['bacon', 'ham']);
+    //         const pizza3 = await makePizza(['mushrooms', 'cheese']);
+    //         console.log([pizza1, pizza2, pizza3]);
+    // }
+    async function makeDinner() {
+            const pizza1 = makePizza(['pepperoni']);
+            const pizza2 = makePizza(['bacon', 'ham']);
+            const pizza3 = makePizza(['mushrooms', 'cheese']);
+            const [pep, ham, mush] = await Promise.all([pizza1, pizza2, pizza3]);
+            console.log(pep, ham, mush);
+    }
+    makeDinner();
   </script>
 </body>
 

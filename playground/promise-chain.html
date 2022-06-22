@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1.0">
+  <title>Event Loop</title>
+  <link rel="stylesheet" href="../base.css">
+</head>
+
+<body>
+  <style>
+    .go {
+      margin: 5rem;
+      background: white;
+      padding: 5rem;
+      width: 25rem;
+      height: 25rem;
+      transition: all 0.2s;
+    }
+
+    .go.circle {
+      border-radius: 50%;
+    }
+
+    .go.red {
+      background: red;
+    }
+
+    .go.purple {
+      background: purple;
+      color: white;
+    }
+
+    .go.invisible {
+      opacity: 0;
+    }
+
+  </style>
+  <div class="go">Click Me</div>
+  <script>
+    const go = document.querySelector('.go');
+    // eslint-disable-next-line no-promise-executor-return
+    const wait = (ms = 0) => new Promise((res) => setTimeout(() => res(), ms));
+    wait(2000).then((res) => console.log('Done!'));
+
+    function animate(e) {
+            const el = e.currentTarget;
+            // 1. Change the text to GO when clicked.
+            el.textContent = 'GO';
+            wait(2000)
+                    .then(() => {
+                            el.classList.add('circle');
+                            return wait(500);
+                    })
+                    .then(() => {
+                            el.classList.add('red');
+                            return wait(500);
+                    })
+                    .then(() => {
+                            el.classList.remove('circle');
+                            return wait(300);
+                    })
+                    .then(() => {
+                            el.classList.remove('red');
+                            el.classList.add('purple');
+                            return wait(500);
+                    })
+                    .then(() => {
+                            el.classList.add('invisible');
+                            return wait(2000);
+                    })
+                    .then(() => {
+                            el.classList.remove('invisible', 'purple', 'red', 'circle');
+                            el.textContent = 'START AGAIN';
+                            console.log('All Promises Resolved');
+                    });
+
+            // wait(500).then(() => el.classList.add('red'));
+            // wait(250).then(() => el.classList.remove('circle'));
+            // wait(300).then(() => {
+            //         el.classList.remove('red');
+            //         el.classList.add('purple');
+            // });
+            // wait(500).then(() => el.classList.add('invisible'));
+            // wait(2000).then(() => {
+            //         el.classList.remove('invisible', 'purple', 'red', 'circle');
+            //         el.textContent = 'START AGAIN';
+            //         console.log('All Promises Resolved');
+            // });
+    }
+
+    async function animate2(e) {
+            const el = e.currentTarget;
+            // 1. Change the text to GO when clicked.
+            el.textContent = 'GO';
+
+            await wait(2000);
+            el.classList.add('circle');
+
+            await wait(500);
+            el.classList.add('red');
+
+            await wait(500);
+            el.classList.remove('circle');
+
+            await wait(300);
+            el.classList.remove('red');
+            el.classList.add('purple');
+
+            await wait(500);
+            el.classList.add('invisible');
+
+            await wait(2000);
+            el.classList.remove('invisible', 'purple', 'red', 'circle');
+            el.textContent = 'START AGAIN';
+            console.log('All Promises Resolved');
+    }
+
+    go.addEventListener('click', animate2);
+
+//     go.addEventListener('click', (e) => {
+//             const el = e.currentTarget;
+//             // 1. Change the text to GO when clicked.
+//             el.textContent = 'GO';
+
+//             setTimeout(() => {
+//                     // 2. Make it a circle after 2 seconds
+//                     el.classList.add('circle');
+
+//                     setTimeout(() => {
+//                             // 3. Make it red after 0.5s
+//                             el.classList.add('red');
+
+//                             setTimeout(() => {
+//                                     // 4. make it square after 0.25s
+//                                     el.classList.remove('circle');
+
+//                                     setTimeout(() => {
+//                                             // 5. make it purple
+//                                             el.classList.remove('red');
+//                                             el.classList.add('purple');
+
+//                                             setTimeout(() => {
+//                                                     // 6. fade out after 0.5s
+//                                                     el.classList.add('invisible');
+
+//                                                     setTimeout(() => {
+//                                                             console.log('You have reacted the 7th layer of callback hell');
+//                                                             el.classList.remove('invisible', 'purple');
+//                                                     }, 500);
+//                                             }, 500);
+//                                     }, 500);
+//                             }, 500);
+//                     }, 500);
+//             }, 500);
+// });
+  </script>
+</body>
+
+</html>

@@ -11,27 +11,72 @@
 <body>
   <script>
     function wait(ms = 0) {
-      return new Promise((resolve) => {
-        setTimeout(resolve, ms);
-      })
+            return new Promise((resolve) => {
+                    setTimeout(resolve, ms);
+            });
     }
 
     function makePizza(toppings = []) {
-      return new Promise(function (resolve, reject) {
-        // reject if people try with pineapple
-        if (toppings.includes('pineapple')) {
-          reject('Seriously? Get out 🍍');
-        }
-        const amountOfTimeToBake = 500 + (toppings.length * 200);
-        // wait 1 second for the pizza to cook:
-        setTimeout(function () {
-          // when you are ready, you can resolve this promise
-          resolve(`Here is your pizza 🍕 with the toppings ${toppings.join(' ')}`);
-        }, amountOfTimeToBake);
-        // if something went wrong, we can reject this promise;
-      });
+            return new Promise((resolve, reject) => {
+                    // reject if people try with pineapple
+                    if (toppings.includes('pineapple')) {
+                            // eslint-disable-next-line prefer-promise-reject-errors
+                            reject('Seriously? Get out 🍍');
+                    }
+                    const amountOfTimeToBake = 500 + toppings.length * 200;
+                    // wait 1 second for the pizza to cook:
+                    setTimeout(() => {
+                            // when you are ready, you can resolve this promise
+                            resolve(`Here is your pizza 🍕 with the toppings ${toppings.join(' ')}`);
+                    }, amountOfTimeToBake);
+                    // if something went wrong, we can reject this promise;
+            });
     }
 
+    // async function go() {
+    //         try {
+    //                 const pizza = await makePizza(['pineapple']);
+    //                 const pizza2 = await makePizza(['pepperoni']);
+    //                 console.log('🚀 ~ file: async-await-error-handling.html ~ line 38 ~ go ~ pizza', pizza);
+    //                 console.log('🚀 ~ file: async-await-error-handling.html ~ line 40 ~ go ~ pizza2', pizza2);
+    //         } catch (err) {
+    //                 console.error(err);
+    //                 console.log('🚀 ~ file: async-await-error-handling.html ~ line 41 ~ go ~ err', err);
+    //         }
+    // }
+
+    function handleError(err) {
+            console.log('🚀 ~ file: async-await-error-handling.html ~ line 49 ~ handleError ~ err', err);
+            console.log(`ohhh nooo`);
+    }
+    // async function go() {
+    //         const pizza = await makePizza(['pineapple']).catch(handleError);
+    // }
+
+    async function go() {
+            const pizza = await makePizza(['pepperoni']);
+            console.log('🚀 ~ file: async-await-error-handling.html ~ line 58 ~ go ~ pizza', pizza);
+            return pizza;
+    }
+
+    // await async function
+    // async function goGo() {
+    //         const result = await go();
+    //         console.log('🚀 ~ file: async-await-error-handling.html ~ line 63 ~ goGo ~ result', result);
+    // }
+
+    // ----- catch error at run time
+    // go().catch(handleError);
+
+    // ----- make safe function with HOF
+    function makeSafe(fn, errorHandler) {
+            return function () {
+                    fn().catch(errorHandler);
+            };
+    }
+
+    const safe = makeSafe(go, handleError);
+    safe();
   </script>
 </body>
 
